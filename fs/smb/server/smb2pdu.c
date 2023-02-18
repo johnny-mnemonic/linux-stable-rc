@@ -295,7 +295,7 @@ int init_smb2_neg_rsp(struct ksmbd_work *work)
 		rsp->SecurityMode |= SMB2_NEGOTIATE_SIGNING_REQUIRED_LE;
 	err = ksmbd_iov_pin_rsp(work, rsp,
 				sizeof(struct smb2_negotiate_rsp) -
-				sizeof(rsp->Buffer) + AUTH_GSS_LENGTH);
+				sizeof(struct smb2_hdr) + AUTH_GSS_LENGTH);
 	if (err)
 		return err;
 	conn->use_spnego = true;
@@ -1264,8 +1264,7 @@ err_out:
 	if (!rc)
 		rc = ksmbd_iov_pin_rsp(work, rsp,
 				       sizeof(struct smb2_negotiate_rsp) -
-					sizeof(rsp->Buffer) +
-					AUTH_GSS_LENGTH + neg_ctxt_len);
+				       sizeof(struct smb2_hdr) + AUTH_GSS_LENGTH + neg_ctxt_len);
 	if (rc < 0)
 		smb2_set_err_rsp(work);
 	return rc;
