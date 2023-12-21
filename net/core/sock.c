@@ -1383,9 +1383,16 @@ int sock_getsockopt(struct socket *sock, int level, int optname,
 		break;
 
 	case SO_LINGER:
+	case SO_TIMESTAMPING_NEW:
 		lv		= sizeof(v.ling);
-		v.ling.l_onoff	= sock_flag(sk, SOCK_LINGER);
-		v.ling.l_linger	= sk->sk_lingertime / HZ;
+		/* For the later-added case SO_TIMESTAMPING_NEW: Be strict about only
+		 * returning the flags when they were set through the same option.
+		 * Don't change the beviour for the old case SO_TIMESTAMPING_OLD.
+		 */
+		if (optname == SO_TIMESTAMPING_OLD || sock_flag(sk, SOCK_TSTAMP_NEW)) {
+			v.ling.l_onoff	= sock_flag(sk, SOCK_LINGER);
+			v.ling.l_linger	= sk->sk_lingertime / HZ;
+		}
 		break;
 
 	case SO_BSDCOMPAT:
