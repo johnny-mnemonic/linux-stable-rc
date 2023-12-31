@@ -1,0 +1,13 @@
+name: 'linux-5.15.y'
+on:
+  workflow_run:
+    workflows: [linux_5_15_y_rc_ready]
+    types: [completed]
+  workflow_dispatch:
+
+jobs:
+  build:
+    #if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    uses:  ./.github/workflows/build-kernel.yml
+    with:
+      branch: 'linux-5.15.y'

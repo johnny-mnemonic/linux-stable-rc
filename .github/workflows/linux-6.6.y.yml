@@ -1,0 +1,13 @@
+name: 'linux-6.6.y'
+on:
+  workflow_run:
+    workflows: [linux_6_6_y_rc_ready]
+    types: [completed]
+  workflow_dispatch:
+
+jobs:
+  build:
+    #if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    uses:  ./.github/workflows/build-kernel.yml
+    with:
+      branch: 'linux-6.6.y'
