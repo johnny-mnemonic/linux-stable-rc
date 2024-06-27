@@ -506,10 +506,8 @@ static void __init numa_clear_kernel_node_hotplug(void)
 	 *   reserve specific pages for Sandy Bridge graphics. ]
 	 */
 	for_each_memblock(reserved, mb_region) {
-		int nid = memblock_get_region_node(mb_region);
-
-		if (nid != MAX_NUMNODES)
-			node_set(nid, reserved_nodemask);
+		if (mb_region->nid != MAX_NUMNODES)
+			node_set(mb_region->nid, reserved_nodemask);
 	}
 
 	/*
